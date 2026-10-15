@@ -2,6 +2,7 @@
 
 Outil pour créer des fonds d'affiche en multipliant une ou plusieurs images carrées.
 Ouvrir `index.html` dans un navigateur (double-clic, aucun serveur nécessaire).
+Responsive : sur tablette et téléphone, l'aperçu reste en haut de l'écran et les réglages défilent dessous.
 L'outil « Passeport » (pages de sécurité) est dans le dossier voisin `passeport/`.
 
 ## Utilisation

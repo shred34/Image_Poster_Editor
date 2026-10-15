@@ -68,7 +68,7 @@
 
   /* ----------------------------- aperçu ------------------------------- */
   function fitCanvas() {
-    const pad = 40;
+    const pad = stage.clientWidth < 700 ? 12 : 40; // petit écran : l'affiche prend toute la place
     const aw = Math.max(80, stage.clientWidth - pad * 2);
     const ah = Math.max(80, stage.clientHeight - pad * 2);
     const a = aspect();

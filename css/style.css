@@ -704,6 +704,12 @@ kbd {
   border-left: 3px solid var(--black);
 }
 
+/* fermé : le contenu du dossier disparaît vraiment (nos hauteurs de ligne
+   écrasaient la règle de dat.gui, le dossier restait ouvert) */
+#gui-host .dg ul.closed > li:not(.title) {
+  display: none !important;
+}
+
 /* fermé : tout est replié sans filet résiduel */
 #gui-host .dg .closed li:not(.title),
 #gui-host .dg .closed ul li,
@@ -729,6 +735,115 @@ kbd {
   :root {
     --col-left: 208px;
     --col-right: 316px;
+  }
+}
+
+/* ---------- Tablette et téléphone : une seule colonne ------------------
+   L'aperçu reste collé en haut de l'écran, les réglages défilent dessous :
+   on voit toujours l'affiche pendant qu'on règle. */
+@media (max-width: 900px) {
+  html,
+  body {
+    height: auto;
+  }
+
+  body {
+    overflow: auto;
+  }
+
+  .app {
+    display: flex;
+    flex-direction: column;
+    height: auto;
+    min-height: 100vh;
+  }
+
+  .stage {
+    position: sticky;
+    top: 0;
+    z-index: 20;
+    order: 0;
+    flex: none;
+    height: 52vh;
+    height: 52svh;
+    border-bottom: 1px solid var(--black);
+  }
+
+  .col {
+    overflow: visible;
+    border: 0;
+  }
+
+  .col-right {
+    order: 1;
+  }
+
+  .col-left {
+    order: 2;
+    border-top: 1px solid var(--black);
+  }
+
+  .drop-overlay {
+    position: fixed;
+  }
+}
+
+@media (max-width: 900px) and (min-width: 600px) {
+  /* tablette : les blocs de gauche sur deux colonnes */
+  .col-left {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .col-left .block {
+    border-right: 1px solid var(--black);
+  }
+
+  .col-left .block:nth-child(2n) {
+    border-right: 0;
+  }
+}
+
+@media (max-width: 599px) {
+  .stage {
+    height: 46vh;
+    height: 46svh;
+  }
+
+  .toolbar {
+    grid-template-columns: 44px 44px 1fr 1fr;
+  }
+
+  .toolbar button,
+  .tx-seg button,
+  .tx-selbar button {
+    min-height: 34px;
+  }
+
+  #gui-host .dg li:not(.folder),
+  #gui-host .dg .cr,
+  #gui-host .dg li.title {
+    height: 34px;
+    line-height: 34px;
+  }
+
+  #gui-host .dg li.title::before {
+    line-height: 34px;
+  }
+}
+
+/* écrans tactiles : pas de clavier, donc pas de raccourcis ;
+   16 px minimum dans les champs, sinon iOS zoome dessus */
+@media (pointer: coarse) {
+  .col-left .block-last {
+    display: none;
+  }
+
+  .tx-input,
+  .tx-select,
+  #gui-host .dg .c input[type=text],
+  #gui-host .dg .c select {
+    font-size: 16px !important;
   }
 }
 
