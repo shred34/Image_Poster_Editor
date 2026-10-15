@@ -194,6 +194,7 @@
        Affiche
        ================================================================ */
     const fPoster = gui.addFolder('Affiche');
+    fPoster.open(); // au chargement, seul ce dossier est ouvert
     sel(fPoster, P.poster, 'format', 'Format', OPT.format);
     sel(fPoster, P.poster, 'orientation', 'Orientation', OPT.orientation);
     num(fPoster, P.poster, 'customW', 'Largeur (ratio)', 1, 20, 0.1, function () { return P.poster.format === 'custom'; });
@@ -416,7 +417,6 @@
     num(fStrips, st, 'overlap', 'Chevauchement des rangées', 0, 0.8, 0.01);
     num(fStrips, st, 'shift', 'Décalage des rangées', 0, 1, 0.01);
 
-    fLayout.open();
 
     /* ================================================================
        Tuiles
@@ -539,7 +539,6 @@
     });
     num(fMod, P.swirl, 'amount', 'Vortex (°)', -1080, 1080, 1);
     num(fMod, P.lens, 'amount', 'Loupe', -0.9, 3, 0.01);
-    fMod.open();
 
     /* ================================================================
        Animation

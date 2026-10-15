@@ -648,14 +648,15 @@ kbd {
   margin-top: 26px;
 }
 
-/* titres de dossiers : on remplace les flèches par + / – */
+/* titres de dossiers : blanc, texte noir, + / – à gauche */
 #gui-host .dg li.title {
-  height: 28px;
+  height: 30px;
   padding: 0 0 0 26px;
-  line-height: 28px;
-  background: var(--black) none;
-  color: var(--white);
-  border-bottom: 1px solid var(--black);
+  line-height: 30px;
+  background: var(--white) none;
+  color: var(--black);
+  border: 1px solid var(--white);
+  border-bottom-color: var(--grey-2);
   font-weight: 700;
   letter-spacing: 0.1em;
   text-transform: uppercase;
@@ -671,28 +672,28 @@ kbd {
   position: absolute;
   left: 10px;
   top: 0;
-  font: 12px/28px var(--mono);
+  font: 12px/30px var(--mono);
 }
 
 #gui-host .dg ul.closed > li.title::before {
   content: "+";
 }
 
-/* sous-dossiers (vagues, modes) : titre blanc à filets noirs */
+/* sous-dossiers (vagues, modes) : plus discrets, en retrait */
 #gui-host .dg .dg .dg li.title {
-  background: var(--white) none;
-  color: var(--black);
-  border-top: 1px solid var(--black);
-  border-bottom: 1px solid var(--black);
+  padding-left: 34px;
+  font-weight: 600;
   letter-spacing: 0.06em;
 }
 
-#gui-host .dg .dg .dg li.title:hover {
-  background: var(--grey-1);
+#gui-host .dg .dg .dg li.title::before {
+  left: 18px;
 }
 
 #gui-host .dg li.title:hover {
-  opacity: 0.88;
+  background: var(--grey-1);
+  border-color: var(--grey-1);
+  border-bottom-color: var(--grey-2);
 }
 
 #gui-host .dg li.folder {
