@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Affiche — multiplication d'images</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<div class="app" id="app">
+
+  <!-- ===== Colonne gauche : images + informations ===== -->
+  <aside class="col col-left">
+    <section class="block">
+      <h2>Images</h2>
+      <!-- le champ fichier est dans le label : le clic ouvre le sélecteur nativement, sans JavaScript -->
+      <label id="dropzone" class="dropzone">
+        <strong>Glisser des images ici</strong>
+        <span>ou cliquer pour choisir (Cmd + V pour coller)</span>
+        <input id="file-input" type="file" accept="image/*,.png,.jpg,.jpeg,.webp,.gif,.svg" multiple>
+      </label>
+      <ul id="image-list" class="image-list"></ul>
+      <p id="image-note" class="note"></p>
+      <button id="btn-clear" class="link" type="button" hidden>Vider la liste</button>
+    </section>
+
+    <section class="block" id="text-block">
+      <h2>Texte de l'affiche</h2>
+      <label class="tx-check tx-main"><input id="tx-show" type="checkbox"> Afficher le texte</label>
+      <div class="tx-fields">
+        <label class="tx-label" for="tx-all">Tout le texte — une ligne = une ligne de l'affiche</label>
+        <textarea id="tx-all" class="tx-input tx-area" rows="9" spellcheck="false"></textarea>
+        <p class="note">Ligne vide = espace. Une heure en tête (21:30, 22h00) aligne les horaires. Cliquer dans une ligne pour la régler.</p>
+
+        <div class="tx-detail">
+          <div class="tx-selbar">
+            <button id="tx-prev" type="button" title="Ligne précédente">‹</button>
+            <span id="tx-sel-name">–</span>
+            <button id="tx-next" type="button" title="Ligne suivante">›</button>
+          </div>
+          <div class="tx-seg" id="tx-align">
+            <button type="button" data-v="left">Gauche</button>
+            <button type="button" data-v="center">Centre</button>
+            <button type="button" data-v="right">Droite</button>
+          </div>
+          <label class="tx-range"><span>Taille</span><input id="tx-scale" type="range" min="0.3" max="6" step="0.05"><output id="tx-scale-v"></output></label>
+          <label class="tx-range"><span>Décalage</span><input id="tx-indent" type="range" min="-0.3" max="0.8" step="0.005"><output id="tx-indent-v"></output></label>
+          <label class="tx-range"><span>Espace avant</span><input id="tx-gap" type="range" min="-1" max="8" step="0.05"><output id="tx-gap-v"></output></label>
+          <div class="tx-checks">
+            <label class="tx-check"><input id="tx-fit" type="checkbox"> Pleine largeur</label>
+            <label class="tx-check"><input id="tx-push" type="checkbox"> Repousser</label>
+            <label class="tx-check"><input id="tx-invert" type="checkbox"> Inversée</label>
+            <label class="tx-check"><input id="tx-block" type="checkbox"> Bloc</label>
+            <label class="tx-check"><input id="tx-title" type="checkbox"> Titre</label>
+            <label class="tx-check"><input id="tx-hidden" type="checkbox"> Masquée</label>
+          </div>
+          <label class="tx-range"><span>Graisse</span>
+            <select id="tx-weight" class="tx-select">
+              <option value="auto">Comme le reste</option>
+              <option value="bold">Gras</option>
+              <option value="normal">Normal</option>
+            </select>
+          </label>
+          <div class="tx-seg tx-actions">
+            <button id="tx-up" type="button" title="Monter la ligne">↑</button>
+            <button id="tx-down" type="button" title="Descendre la ligne">↓</button>
+            <button id="tx-add" type="button" title="Nouvelle ligne sous la ligne sélectionnée">+ Ligne</button>
+            <button id="tx-del" type="button" title="Supprimer la ligne">Suppr.</button>
+          </div>
+          <button id="tx-all-align" class="link" type="button">Appliquer l'alignement à toutes les lignes</button>
+        </div>
+      </div>
+    </section>
+
+    <section class="block">
+      <h2>Favoris</h2>
+      <ul id="fav-list" class="fav-list"></ul>
+      <p id="fav-note" class="note"></p>
+    </section>
+
+    <section class="block">
+      <h2>Informations</h2>
+      <dl class="info">
+        <dt>Format</dt>  <dd id="info-format">–</dd>
+        <dt>Export</dt>  <dd id="info-export">–</dd>
+        <dt id="dt-tiles">Tuiles</dt>  <dd id="info-tiles">–</dd>
+        <dt>Rendu</dt>   <dd id="info-render">–</dd>
+      </dl>
+    </section>
+
+    <section class="block block-last">
+      <h2>Raccourcis</h2>
+      <ul class="keys">
+        <li><kbd>R</kbd><span>nouveau seed</span></li>
+        <li><kbd>H</kbd><span>configuration au hasard</span></li>
+        <li><kbd>←</kbd><kbd>→</kbd><span>précédent / suivant</span></li>
+        <li><kbd>F</kbd><span>ajouter aux favoris</span></li>
+        <li><kbd>T</kbd><span>afficher / masquer le texte</span></li>
+        <li><kbd>Espace</kbd><span>lecture / pause</span></li>
+        <li><kbd>0</kbd><span>revenir au début de la boucle</span></li>
+        <li><kbd>E</kbd><span>exporter en JPG</span></li>
+      </ul>
+    </section>
+  </aside>
+
+  <!-- ===== Centre : affiche ===== -->
+  <main class="stage" id="stage">
+    <div class="poster-wrap">
+      <canvas id="canvas" aria-label="Aperçu de l'affiche"></canvas>
+    </div>
+    <div class="drop-overlay" id="drop-overlay"><span>Déposer les images</span></div>
+  </main>
+
+  <!-- ===== Colonne droite : export + réglages ===== -->
+  <aside class="col col-right">
+    <div class="export-bar">
+      <button id="btn-export" class="btn-primary" type="button">Exporter en JPG</button>
+      <p id="export-info" class="note">–</p>
+      <button id="btn-export-anim" class="btn-secondary" type="button" title="Une image par frame de la boucle, dans un dossier ZIP">Exporter l'animation (ZIP)</button>
+      <p id="anim-info" class="note">–</p>
+    </div>
+    <div class="toolbar">
+      <button id="btn-prev" type="button" title="Configuration précédente (←)">←</button>
+      <button id="btn-next" type="button" title="Configuration suivante (→)">→</button>
+      <button id="btn-random" type="button" title="Configuration au hasard (H)">Hasard</button>
+      <button id="btn-fav" type="button" title="Ajouter aux favoris (F)">+ Favori</button>
+      <p id="history-info" class="toolbar-note">–</p>
+    </div>
+    <div id="gui-host" class="gui-host"></div>
+    <input id="settings-input" type="file" accept="application/json,.json" hidden>
+  </aside>
+
+</div>
+
+<script src="vendor/dat.gui.min.js"></script>
+<script src="js/utils.js"></script>
+<script src="js/colorpicker.js"></script>
+<script src="js/anim.js"></script>
+<script src="js/postertext.js"></script>
+<script src="js/params.js"></script>
+<script src="js/images.js"></script>
+<script src="js/layouts.js"></script>
+<script src="js/guilloche.js"></script>
+<script src="js/renderer.js"></script>
+<script src="js/exporter.js"></script>
+<script src="js/gui.js"></script>
+<script src="js/library.js"></script>
+<script src="js/history.js"></script>
+<script src="js/favorites.js"></script>
+<script src="js/textpanel.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>
